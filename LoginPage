@@ -17,7 +17,7 @@
   <script src="https://cdn.auth0.com/js/es5-shim.min.js"></script>
   <![endif]-->
 
-  <script src="https://cdn.auth0.com/js/lock/10.11/lock.min.js"></script>
+  <script src="https://cdn.auth0.com/js/lock/10.16.0/lock.min.js"></script>
   <script>
     // Decode utf8 characters properly
     var config = JSON.parse(decodeURIComponent(escape(window.atob('@@config@@'))));
@@ -26,31 +26,51 @@
     var prompt = config.prompt;
     var languageDictionary;
     var language;
-    
+    console.log(config);
+    var custID = config.extraParams.customerID;
     if (config.dict && config.dict.signin && config.dict.signin.title) {
       languageDictionary = { title: config.dict.signin.title };
     } else if (typeof config.dict === 'string') {
       language = config.dict;
     }
     var loginHint = config.extraParams.login_hint;
-	
-var options = {
-  theme: {
-    labeledSubmitButton: true,
-    logo: "http://i1259.photobucket.com/albums/ii543/rahultendulkar/BA_zpsrjzgh0pj.png",
-    primaryColor: "green",
-    authButtons: {
-      "TestConnection": {
-        displayName: "Test Conn",
-        primaryColor: "#b7b7b7",
-        foregroundColor: "#000000"
-      }
-    },
-    alloweConnections: ['twitter', 'TestConnection']
-  }
-};
+	if (custID=="ba"){
+	var options = {
+		theme: {
+		logo: "http://i1259.photobucket.com/albums/ii543/rahultendulkar/BA_zpsrjzgh0pj.png",
+		primaryColor: "blue",
+	},//theme closed
+	allowSignUp: true,
+	allowedConnections: ['Username-Password-Authentication', 'facebook', 'google-oauth2', 'twitter'],
+	languageDictionary: {
+    emailInputPlaceholder: "Enter your Executive Club Number",
+    title: "BA Auth0 Login",
+	signUpTerms: "I agree to the <a href='/terms' target='_new'>terms of service</a> and <a href='/privacy' target='_new'>privacy policy</a>.",
+	mustAcceptTerms:  true
+	}, //langdict closed
+	forgotPasswordLink: "https://www.britishairways.com/travel/forgottendetails/public/en_gb",
+	prefill: loginHint ? { email: loginHint, username: loginHint } : null,
+	closable: false,
+}; //options closed
+  }//close If
 
-    
+    	if (custID=="tesco"){
+	var options = {
+		
+	theme: {
+		logo: "http://i1259.photobucket.com/albums/ii543/rahultendulkar/tesco-logo_zpsw9kflur0.jpg",
+		primaryColor: "red",
+	},//theme closed
+	allowedConnections: ['Username-Password-Authentication','facebook', 'google-oauth2'],
+	languageDictionary: {
+    emailInputPlaceholder: "Enter your email address",
+    title: "Tesco Auth0 Login"
+	}, //langdict closed
+	forgotPasswordLink: "https://secure.tesco.com/login/en-gb/forgottenpassword/",
+	prefill: loginHint ? { email: loginHint, username: loginHint } : null,
+	closable: false
+}; //options closed
+  }//close If
     var lock = new Auth0Lock(config.clientID, config.auth0Domain, options);
 
     lock.show();
